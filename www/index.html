@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TableView</title>
+    <script type="text/javascript" src="tableview.browser.js"></script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        async function main() {
+            const view = new tableview.TableView(1000, 25, (reuse, index) => {
+                let row = reuse;
+                if (!row) {
+                    row = new tableview.TableRow();
+                }
+                if (index % 2) {
+                    row.element.style.backgroundColor = '#fafaff';
+                } else {
+                    row.element.style.backgroundColor = '#ffffff';
+                }
+                row.element.innerText = index;
+                return row;
+            });
+            // view.runHot = true;
+            view.parent = document.body;
+            console.log(view);
+        }
+        document.addEventListener('DOMContentLoaded', main);
+    </script>
+</body>
+</html>

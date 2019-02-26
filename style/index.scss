@@ -1,0 +1,43 @@
+.darionco_table_view_container {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+
+    background-color: red;
+}
+
+.darionco_table_view_header_container {
+    min-width: 100%;
+
+    background-color: darkblue;
+}
+
+.darionco_table_view_header {
+    width: 100%;
+    height: 20px;
+}
+
+.darionco_table_view_scrollable {
+    min-width: 100%;
+    flex: 1 1;
+    overflow: scroll;
+
+    background-color: yellow;
+}
+
+.darionco_table_view_content {
+    min-width: 100%;
+}
+
+.darionco_table_view_row_container {
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.darionco_table_view_row {
+    width: 100%;
+    height: 25px;
+}
