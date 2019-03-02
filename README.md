@@ -6,9 +6,9 @@
 - On the command line navigate to the repo's folder
 - Run `yarn install`
 - Run `yarn start` and wait for project to build
-- In Chrome (has tobe chrome for now) navigate to `localhost:8090`
+- In Chrome (has to be chrome for now) navigate to `localhost:8090`
 
-You can experient with the number of rows by changing the variable `rowCount` in `index.html`. The content of the rows is also defined there.
+You can experiment with the number of rows displayed by changing the variable `rowCount` in `index.html`. The content of the rows is also defined there.
 
 At the moment chrome can only display ~1.6 mil rows because of a scroll height limitation of the browser. A custom scrolling library will need to be used for larger tables.
 
