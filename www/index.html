@@ -16,17 +16,22 @@
 <body>
     <script>
         async function main() {
-            const view = new tableview.TableView(1000, 25, (reuse, index) => {
-                let row = reuse;
-                if (!row) {
-                    row = new tableview.TableRow();
-                }
+            const rowCount = 10000;
+            const view = new tableview.TableView(4, rowCount, 18, (row, index) => {
                 if (index % 2) {
                     row.element.style.backgroundColor = '#fafaff';
                 } else {
                     row.element.style.backgroundColor = '#ffffff';
                 }
-                row.element.innerText = index;
+                row.setContent(0, index);
+                row.setContent(1, Math.PI * index);
+                row.setContent(2, Math.PI * index * index);
+
+                const progress = document.createElement('div');
+                progress.style.backgroundColor = '#4477ff';
+                progress.style.height = '100%';
+                progress.style.width = `${Math.fround(index / rowCount * 100)}%`;
+                row.setContent(3, progress);
                 return row;
             });
             // view.runHot = true;

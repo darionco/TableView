@@ -3,10 +3,21 @@ import '../style/index.scss';
 const kIsHeaderSymbol = Symbol('TableRow::isHeader');
 
 export class TableRow {
-    constructor(className = 'darionco_table_view_row') {
+    constructor(columns = 1, height = 20, className = 'darionco_table_view_row') {
         this.mElement = document.createElement('div');
         this.mElement.className = className;
+        this.mElement.style.height = `${height}px`;
+        this.mElement.style.lineHeight = `${height}px`;
+        this.mCells = [];
         this[kIsHeaderSymbol] = false;
+
+        for (let i = 0; i < columns; ++i) {
+            const el = document.createElement('div');
+            el.className = 'darionco_table_view_cell';
+            el.style.width = '100px';
+            this.mElement.appendChild(el);
+            this.mCells.push(el);
+        }
     }
 
     get element() {
@@ -16,19 +27,32 @@ export class TableRow {
     get isHeader() {
         return this[kIsHeaderSymbol];
     }
-}
 
-export class TableHeader extends TableRow {
-    constructor(className = 'darionco_table_view_header') {
-        super(className);
-        this[kIsHeaderSymbol] = true;
+    getCell(cell) {
+        return this.mCells[cell];
+    }
+
+    setCellWidth(cell, width) {
+        this.mCells[cell].style.width = `${width}px`;
+    }
+
+    setContent(cell, content) {
+        if (content instanceof HTMLElement) {
+            while (this.mCells[cell].lastChild) {
+                this.mCells[cell].removeChild(this.mCells[cell].lastChild);
+            }
+            this.mCells[cell].appendChild(content);
+        } else {
+            this.mCells[cell].innerText = content;
+        }
     }
 }
 
 export class TableView {
-    constructor(rowCount = 0, rowHeight = 15, rowProvider) {
+    constructor(columnCount = 1, rowCount = 0, rowHeight = 20, rowProvider) {
         this.mParent = null;
         this.mRunHot = false;
+        this.mColumnCount = columnCount;
         this.mRowCount = rowCount;
         this.mRowHeight = rowHeight;
         this.mContainer = document.createElement('div');
@@ -117,7 +141,7 @@ export class TableView {
         const startPosition = Math.max(0, this.mScrollable.scrollTop - this.mRowHeight * this.mRowsPadding);
         const endPosition = Math.min(this.mRowHeight * this.mRowCount, this.mScrollable.scrollTop + this.mScrollable.clientHeight + this.mRowHeight * this.mRowsPadding);
         const startIndex = Math.floor(startPosition / this.mRowHeight);
-        const endIndex = Math.floor(endPosition / this.mRowHeight);
+        const endIndex = Math.min(this.mRowCount - 1, Math.floor(endPosition / this.mRowHeight));
         const rowStartPosition = startIndex * this.mRowHeight;
 
         if (startIndex !== this.mMinIndex || this.mMaxIndex !== endIndex) {
@@ -145,8 +169,13 @@ export class TableView {
 
             for (let i = startIndex; i <= endIndex; ++i) {
                 if (!this.mIndexedRows.hasOwnProperty(i)) {
-                    const reusable = this.mReusableRows.length ? this.mReusableRows.pop() : null;
-                    const row = this.mRowProvider(reusable, i);
+                    let row;
+                    if (this.mReusableRows.length) {
+                        row = this.mReusableRows.pop();
+                    } else {
+                        row = new TableRow(this.mColumnCount, this.mRowHeight);
+                    }
+                    this.mRowProvider(row, i);
                     row.element.style.order = String(i);
                     this.mIndexedRows[i] = row;
                     if (!row.element.parentNode) {
